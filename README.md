@@ -74,13 +74,8 @@ YOLOv8-BlindAssist/
 │
 └── samples/
     ├── dataset/
-    │   ├── orang_01.jpg
-    │   ├── mobil_01.jpg
-    │   └── zebra_cross_01.jpg
-    │
     └── detections/
-        ├── hasil_deteksi_01.jpg
-        └── hasil_deteksi_02.jpg
+
 ```
 
 > **Catatan**: Model hasil training (`best.pt`) dan folder `runs/` tidak disertakan di repository ini karena ukurannya besar. Latih ulang sendiri menggunakan `train_model.py`, atau minta filenya langsung ke penulis.
