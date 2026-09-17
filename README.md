@@ -61,33 +61,29 @@ Performa terbaik per kelas: zebra cross (mAP50 0.995), sepeda dan motor (mAP50 ~
 - **Model/Library**: Ultralytics YOLOv8, OpenCV (cv2), gTTS (Google Text-to-Speech), pygame (pemutaran audio), Roboflow (manajemen dataset & API), Matplotlib & Seaborn (visualisasi hasil evaluasi model)
 - **Tools**: Visual Studio Code
 
-##  Struktur Proyek
+## Struktur Proyek
 
 ```
 YOLOv8-BlindAssist/
 │
-├── README.md                       
-├── requirements.txt                                    
+├── README.md
+├── requirements.txt
 │
-├── train_model.py                  
-├── Model_pakai_gTTS.py             
+├── train_model.py
+├── Model_pakai_gTTS.py
 │
-├── samples/
-│   ├── dataset/                    
-│   │   ├── orang_01.jpg
-│   │   ├── mobil_01.jpg
-│   │   └── zebra_cross_01.jpg
-│   │
-│   └── detections/                 
-│       ├── hasil_deteksi_01.jpg
-│       └── hasil_deteksi_02.jpg
-│
-└── runs/
-    └── detect/
-        └── custom_yolov8s/
-            └── weights/
-                └── best.pt          
+└── samples/
+    ├── dataset/
+    │   ├── orang_01.jpg
+    │   ├── mobil_01.jpg
+    │   └── zebra_cross_01.jpg
+    │
+    └── detections/
+        ├── hasil_deteksi_01.jpg
+        └── hasil_deteksi_02.jpg
 ```
+
+> **Catatan**: Model hasil training (`best.pt`) dan folder `runs/` tidak disertakan di repository ini karena ukurannya besar. Latih ulang sendiri menggunakan `train_model.py`, atau minta filenya langsung ke penulis.
 
 ## Cara Menjalankan
 
@@ -98,17 +94,25 @@ YOLOv8-BlindAssist/
 ```
 2. Install dependencies
 ```bash
-   pip install ultralytics opencv-python gTTS pygame roboflow torch
+   pip install -r requirements.txt
 ```
-3. Siapkan `.env` berisi `ROBOFLOW_API_KEY=xxxx` (lihat catatan privasi di bawah), lalu jalankan training
+3. Set API key Roboflow sebagai environment variable (bukan disimpan sebagai file, supaya tidak berisiko ikut ter-commit)
+```bash
+   # Windows (PowerShell)
+   $env:ROBOFLOW_API_KEY="xxxx"
+
+   # macOS/Linux
+   export ROBOFLOW_API_KEY="xxxx"
+```
+4. Jalankan training (di sesi terminal yang sama dengan langkah 3)
 ```bash
    python train_model.py
 ```
-4. Jalankan sistem deteksi real-time (pastikan kamera terhubung, dan path model di `Model_pakai_gTTS.py` sudah sesuai hasil training)
+5. Jalankan sistem deteksi real-time (pastikan kamera terhubung, dan path model di `Model_pakai_gTTS.py` sudah sesuai hasil training)
 ```bash
    python "Model_pakai_gTTS.py"
 ```
-5. Tekan `q` untuk keluar dari jendela deteksi.
+6. Tekan `q` untuk keluar dari jendela deteksi.
 
 ## Batasan
 
@@ -119,4 +123,4 @@ YOLOv8-BlindAssist/
 
 ## Catatan Keamanan & Etika Data
 
-Repository ini tidak menyertakan kredensial API apa pun (Roboflow API key digantikan dengan environment variable dan tidak diikutsertakan dalam kode). Dataset yang digunakan berupa gambar objek publik di area trotoar (seperti kendaraan, pejalan kaki, pohon, tiang, dan zebra cross) yang dikumpulkan dari sumber terbuka (Google dan platform Roboflow) untuk keperluan penelitian akademik non-komersial dalam rangka Data Science Capstone Project. Selama pengoperasian sistem, frame video dari kamera diproses secara real-time dan tidak disimpan secara permanen.
+Repository ini tidak menyertakan kredensial API apa pun — Roboflow API key diset sebagai environment variable di sesi terminal saat menjalankan program, bukan disimpan dalam file di dalam repo. Karena proyek ini tidak menggunakan `.gitignore`, penulis memastikan secara manual bahwa file-file sensitif (API key, model hasil training, dataset penuh) tidak pernah ditambahkan ke dalam commit. Dataset yang digunakan berupa gambar objek publik di area trotoar (seperti kendaraan, pejalan kaki, pohon, tiang, dan zebra cross) yang dikumpulkan dari sumber terbuka (Google dan platform Roboflow) untuk keperluan penelitian akademik non-komersial dalam rangka Data Science Capstone Project. Selama pengoperasian sistem, frame video dari kamera diproses secara real-time dan tidak disimpan secara permanen.
