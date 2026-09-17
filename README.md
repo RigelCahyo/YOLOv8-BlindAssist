@@ -1,10 +1,10 @@
 # YOLOv8-BlindAssist
+
 Real-time object detection system using YOLOv8 with voice feedback to assist visually impaired users in identifying surrounding obstacles.
-Deteksi Objek Real-Time Berbasis YOLO dengan Umpan Balik Suara untuk Mendukung Mobilitas Tunanetra
 
-Sistem deteksi objek real-time berbasis YOLOv8 yang memberikan umpan balik suara (Bahasa Indonesia) untuk membantu penyandang tunanetra mengenali rintangan di sekitar trotoar.
+> Deteksi Objek Real-Time Berbasis YOLO dengan Umpan Balik Suara untuk Mendukung Mobilitas Tunanetra — sistem yang memberikan umpan balik suara (Bahasa Indonesia) untuk membantu penyandang tunanetra mengenali rintangan di sekitar trotoar.
 
-# Deskripsi Proyek
+## Deskripsi Proyek
 
 Mobilitas mandiri merupakan tantangan besar bagi penyandang tunanetra. Alat bantu tradisional seperti tongkat putih dan anjing penuntun memiliki keterbatasan: tongkat putih hanya mendeteksi rintangan dalam jangkauan fisik, sementara anjing penuntun memerlukan pelatihan mahal dan intensif. Sensor seperti ultrasonik, inframerah, atau LiDAR juga belum cukup untuk mengenali jenis objek secara spesifik.
 
@@ -12,77 +12,102 @@ Proyek ini mengembangkan sistem deteksi objek berbasis algoritma YOLOv8 yang dii
 
 Proyek ini merupakan Data Science Capstone Project, Program Studi Sains Data, Fakultas Sains dan Teknologi, Universitas Teknologi Yogyakarta (2025).
 
-Rumusan masalah:
+**Rumusan masalah:**
 
-Bagaimana implementasi sistem deteksi objek berbasis YOLO yang beroperasi real-time untuk mendukung mobilitas tunanetra?
-Bagaimana implementasi umpan balik intuitif (suara) agar informasi deteksi tersampaikan ke pengguna?
-# Dataset
-Sumber: dikumpulkan dari Google dan diproses/dianotasi menggunakan platform Roboflow.
-Jumlah kelas: 12 kategori objek — orang, kursi, meja, bollard, pohon, tiang, truk, sepeda, motor, mobil, gerobak, dan zebra cross.
-Jumlah gambar: 100–150 gambar per kategori.
-Preprocessing: anotasi bounding box manual, auto-orientation, resize seragam ke 640×640 piksel, serta augmentasi (rotasi, flipping, penyesuaian pencahayaan).
-Split data: 70% training, 15% validation, 15% testing (dibagi otomatis oleh Roboflow).
-🔬 Metodologi
-Memahami permasalahan (kompleksitas deteksi banyak objek + cara menyampaikan info ke pengguna tunanetra)
-Pengumpulan data dari Google & Roboflow
-Pengolahan dataset (anotasi, augmentasi, resize, split) menggunakan Roboflow
-Pelatihan model deteksi objek dengan YOLOv8
-Evaluasi model menggunakan metrik mean Average Precision (mAP)
-Deployment: integrasi model dengan kamera + umpan balik suara real-time (gTTS)
-🤖 Model dan Evaluasi
-Model: YOLOv8s (pre-trained small variant, yolov8s.pt)
-Parameter training: 500 epoch, image size 640px, batch size 8, dilatih dengan GPU (device=0)
-Metrik	Hasil
-mAP50	0.874
-mAP50-95	0.597
-Precision	93.2%
-Recall	81.2%
+- Bagaimana implementasi sistem deteksi objek berbasis YOLO yang beroperasi *real-time* untuk mendukung mobilitas tunanetra?
+- Bagaimana implementasi umpan balik intuitif (suara) agar informasi deteksi tersampaikan ke pengguna?
+
+## Dataset
+
+- **Sumber**: dikumpulkan dari Google dan diproses/dianotasi menggunakan platform Roboflow.
+- **Jumlah kelas**: 12 kategori objek — orang, kursi, meja, bollard, pohon, tiang, truk, sepeda, motor, mobil, gerobak, dan zebra cross.
+- **Jumlah gambar**: 100–150 gambar per kategori.
+- **Preprocessing**: anotasi bounding box manual, auto-orientation, resize seragam ke 640×640 piksel, serta augmentasi (rotasi, flipping, penyesuaian pencahayaan).
+- **Split data**: 70% training, 15% validation, 15% testing (dibagi otomatis oleh Roboflow).
+
+## Metodologi
+
+1. Memahami permasalahan (kompleksitas deteksi banyak objek + cara menyampaikan info ke pengguna tunanetra)
+2. Pengumpulan data dari Google & Roboflow
+3. Pengolahan dataset (anotasi, augmentasi, resize, split) menggunakan Roboflow
+4. Pelatihan model deteksi objek dengan YOLOv8
+5. Evaluasi model menggunakan metrik mean Average Precision (mAP)
+6. Deployment: integrasi model dengan kamera + umpan balik suara real-time (gTTS)
+
+## Model dan Evaluasi
+
+- **Model**: YOLOv8s (pre-trained small variant, `yolov8s.pt`)
+- **Parameter training**: 500 epoch, image size 640px, batch size 8, dilatih dengan GPU (`device=0`)
+
+| Metrik | Hasil |
+|---|---|
+| mAP50 | 0.874 |
+| mAP50-95 | 0.597 |
+| Precision | 93.2% |
+| Recall | 81.2% |
 
 Performa terbaik per kelas: zebra cross (mAP50 0.995), sepeda dan motor (mAP50 ~0.995 dan 0.96). Performa lebih rendah pada mAP50-95: tiang (0.395), gerobak (0.54), kursi (0.589), dan mobil (0.501).
 
-# Insight / Analisis
-Model sangat andal mendeteksi zebra cross, sepeda, dan motor bahkan pada threshold IoU yang lebih ketat.
-Objek seperti tiang, gerobak, kursi, dan mobil lebih sulit dideteksi dengan presisi tinggi — kemungkinan karena kemiripan visual antar kelas (misal truk kadang salah terdeteksi sebagai mobil) atau latar belakang yang kompleks.
-Model kesulitan mendeteksi objek yang terlalu jauh dari kamera.
-Nilai confidence bervariasi antar objek; bollard dan kursi cenderung terdeteksi dengan confidence tinggi, sementara gerobak dan mobil lebih rendah.
-📈 Dashboard
+## Insight / Analisis
+
+- Model sangat andal mendeteksi zebra cross, sepeda, dan motor bahkan pada threshold IoU yang lebih ketat.
+- Objek seperti tiang, gerobak, kursi, dan mobil lebih sulit dideteksi dengan presisi tinggi — kemungkinan karena kemiripan visual antar kelas (misal truk kadang salah terdeteksi sebagai mobil) atau latar belakang yang kompleks.
+- Model kesulitan mendeteksi objek yang terlalu jauh dari kamera.
+- Nilai confidence bervariasi antar objek; bollard dan kursi cenderung terdeteksi dengan confidence tinggi, sementara gerobak dan mobil lebih rendah.
+
+## Dashboard
 
 Tidak ada dashboard web pada proyek ini. Output sistem berupa jendela video real-time (OpenCV) yang menampilkan bounding box hasil deteksi, disertai umpan balik suara langsung ke pengguna.
 
-# Teknologi yang Digunakan
-Bahasa: Python
-Model/Library: Ultralytics YOLOv8, OpenCV (cv2), gTTS (Google Text-to-Speech), pygame (pemutaran audio), Roboflow (manajemen dataset & API)
-Tools: Visual Studio Code
-Hardware: Laptop Acer Swift X, AMD Ryzen 5000 Series, RAM 16GB, GPU NVIDIA GeForce RTX 3050
-# Struktur Proyek
-nama-proyek/
+## Teknologi yang Digunakan
+
+- **Bahasa**: Python
+- **Model/Library**: Ultralytics YOLOv8, OpenCV (cv2), gTTS (Google Text-to-Speech), pygame (pemutaran audio), Roboflow (manajemen dataset & API)
+- **Tools**: Visual Studio Code
+- **Hardware**: Laptop Acer Swift X, AMD Ryzen 5000 Series, RAM 16GB, GPU NVIDIA GeForce RTX 3050
+
+## Struktur Proyek
+
+```
+YOLOv8-BlindAssist/
 ├── train_model.py          # Download dataset dari Roboflow & training model YOLOv8
 ├── Model_pakai_gTTS.py     # Deteksi real-time + umpan balik suara (deployment)
 ├── runs/detect/custom_yolov8s/weights/best.pt   # Model hasil training (tidak diupload jika besar)
 ├── requirements.txt
 └── README.md
-# Cara Menjalankan
-Clone repository ini
-bash
-   git clone https://github.com/username/nama-repo.git
-   cd nama-repo
-Install dependencies
-bash
+```
+
+## Cara Menjalankan
+
+1. Clone repository ini
+```bash
+   git clone https://github.com/username/YOLOv8-BlindAssist.git
+   cd YOLOv8-BlindAssist
+```
+2. Install dependencies
+```bash
    pip install ultralytics opencv-python gTTS pygame roboflow torch
-Siapkan .env berisi ROBOFLOW_API_KEY=xxxx (lihat catatan privasi di bawah), lalu jalankan training
-bash
+```
+3. Siapkan `.env` berisi `ROBOFLOW_API_KEY=xxxx` (lihat catatan privasi di bawah), lalu jalankan training
+```bash
    python train_model.py
-Jalankan sistem deteksi real-time (pastikan kamera terhubung, dan path model di Model_pakai_gTTS.py sudah sesuai hasil training)
-bash
+```
+4. Jalankan sistem deteksi real-time (pastikan kamera terhubung, dan path model di `Model_pakai_gTTS.py` sudah sesuai hasil training)
+```bash
    python "Model_pakai_gTTS.py"
-Tekan q untuk keluar dari jendela deteksi.
-# Batasan
-Hanya mendeteksi 12 kategori objek statis/dinamis di area trotoar (tidak mencakup hewan, objek kecil, atau rambu lalu lintas selain zebra cross).
-Dioptimalkan untuk lingkungan perkotaan dengan trotoar standar — belum diuji untuk lingkungan non-standar (hutan, lahan pertanian, hujan deras, kabut tebal, medan kasar, atau pencahayaan ekstrem).
-Belum menyediakan informasi arah navigasi atau jarak antara objek dan pengguna, hanya memberi tahu objek apa yang ada di depan.
-Akurasi menurun untuk objek yang letaknya jauh dari kamera, dan beberapa kategori (tiang, gerobak, kursi, mobil) memiliki tingkat kesalahan deteksi lebih tinggi.
-# Catatan Privasi dan Etika Data
-Sistem menggunakan kamera untuk menangkap video lingkungan sekitar pengguna secara real-time; frame diproses langsung dan audio hasil gTTS dibangkitkan di memori (BytesIO) tanpa disimpan sebagai file permanen.
-Karena memakai kamera di ruang publik, ada potensi menangkap gambar orang lain (bystander) secara tidak sengaja — pertimbangkan aspek privasi/etika bila sistem ini diuji atau digunakan di luar lingkungan riset.
-Dataset dikumpulkan dari Google dan Roboflow; pastikan lisensi/izin penggunaan gambar dari sumber tersebut sudah sesuai sebelum didistribusikan secara publik.
-Jangan meng-hardcode API key (seperti Roboflow API key) di kode yang diupload ke repo publik — gunakan environment variable dan tambahkan file kredensial ke .gitignore.
+```
+5. Tekan `q` untuk keluar dari jendela deteksi.
+
+## Batasan
+
+- Hanya mendeteksi 12 kategori objek statis/dinamis di area trotoar (tidak mencakup hewan, objek kecil, atau rambu lalu lintas selain zebra cross).
+- Dioptimalkan untuk lingkungan perkotaan dengan trotoar standar — belum diuji untuk lingkungan non-standar (hutan, lahan pertanian, hujan deras, kabut tebal, medan kasar, atau pencahayaan ekstrem).
+- Belum menyediakan informasi arah navigasi atau jarak antara objek dan pengguna, hanya memberi tahu objek apa yang ada di depan.
+- Akurasi menurun untuk objek yang letaknya jauh dari kamera, dan beberapa kategori (tiang, gerobak, kursi, mobil) memiliki tingkat kesalahan deteksi lebih tinggi.
+
+## Catatan Privasi dan Etika Data
+
+- Sistem menggunakan kamera untuk menangkap video lingkungan sekitar pengguna secara real-time; frame diproses langsung dan audio hasil gTTS dibangkitkan di memori (BytesIO) tanpa disimpan sebagai file permanen.
+- Karena memakai kamera di ruang publik, ada potensi menangkap gambar orang lain (bystander) secara tidak sengaja — pertimbangkan aspek privasi/etika bila sistem ini diuji atau digunakan di luar lingkungan riset.
+- Dataset dikumpulkan dari Google dan Roboflow; pastikan lisensi/izin penggunaan gambar dari sumber tersebut sudah sesuai sebelum didistribusikan secara publik.
+- **Jangan meng-hardcode API key** (seperti Roboflow API key) di kode yang diupload ke repo publik — gunakan environment variable dan tambahkan file kredensial ke `.gitignore`.
