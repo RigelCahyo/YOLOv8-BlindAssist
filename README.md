@@ -20,7 +20,7 @@ Proyek ini merupakan Data Science Capstone Project, Program Studi Sains Data, Fa
 ## Dataset
 
 - **Sumber**: dikumpulkan dari Google dan diproses/dianotasi menggunakan platform Roboflow.
-- **Jumlah kelas**: 12 kategori objek — orang, kursi, meja, bollard, pohon, tiang, truk, sepeda, motor, mobil, gerobak, dan zebra cross.
+- **Jumlah kelas**: 12 kategori objek yakni orang, kursi, meja, bollard, pohon, tiang, truk, sepeda, motor, mobil, gerobak, dan zebra cross.
 - **Jumlah gambar**: 100–150 gambar per kategori.
 - **Preprocessing**: anotasi bounding box manual, auto-orientation, resize seragam ke 640×640 piksel, serta augmentasi (rotasi, flipping, penyesuaian pencahayaan).
 - **Split data**: 70% training, 15% validation, 15% testing (dibagi otomatis oleh Roboflow).
@@ -51,30 +51,42 @@ Performa terbaik per kelas: zebra cross (mAP50 0.995), sepeda dan motor (mAP50 ~
 ## Insight / Analisis
 
 - Model sangat andal mendeteksi zebra cross, sepeda, dan motor bahkan pada threshold IoU yang lebih ketat.
-- Objek seperti tiang, gerobak, kursi, dan mobil lebih sulit dideteksi dengan presisi tinggi — kemungkinan karena kemiripan visual antar kelas (misal truk kadang salah terdeteksi sebagai mobil) atau latar belakang yang kompleks.
+- Objek seperti tiang, gerobak, kursi, dan mobil lebih sulit dideteksi dengan presisi tinggi karena kemiripan visual antar kelas (misal truk kadang salah terdeteksi sebagai mobil) atau latar belakang yang kompleks.
 - Model kesulitan mendeteksi objek yang terlalu jauh dari kamera.
 - Nilai confidence bervariasi antar objek; bollard dan kursi cenderung terdeteksi dengan confidence tinggi, sementara gerobak dan mobil lebih rendah.
-
-## Dashboard
-
-Tidak ada dashboard web pada proyek ini. Output sistem berupa jendela video real-time (OpenCV) yang menampilkan bounding box hasil deteksi, disertai umpan balik suara langsung ke pengguna.
 
 ## Teknologi yang Digunakan
 
 - **Bahasa**: Python
-- **Model/Library**: Ultralytics YOLOv8, OpenCV (cv2), gTTS (Google Text-to-Speech), pygame (pemutaran audio), Roboflow (manajemen dataset & API)
+- **Model/Library**: Ultralytics YOLOv8, OpenCV (cv2), gTTS (Google Text-to-Speech), pygame (pemutaran audio), Roboflow (manajemen dataset & API), Matplotlib & Seaborn (visualisasi hasil evaluasi model)
 - **Tools**: Visual Studio Code
-- **Hardware**: Laptop Acer Swift X, AMD Ryzen 5000 Series, RAM 16GB, GPU NVIDIA GeForce RTX 3050
 
-## Struktur Proyek
+##  Struktur Proyek
 
 ```
 YOLOv8-BlindAssist/
-├── train_model.py          # Download dataset dari Roboflow & training model YOLOv8
-├── Model_pakai_gTTS.py     # Deteksi real-time + umpan balik suara (deployment)
-├── runs/detect/custom_yolov8s/weights/best.pt   # Model hasil training (tidak diupload jika besar)
-├── requirements.txt
-└── README.md
+│
+├── README.md                       
+├── requirements.txt                                    
+│
+├── train_model.py                  
+├── Model_pakai_gTTS.py             
+│
+├── samples/
+│   ├── dataset/                    
+│   │   ├── orang_01.jpg
+│   │   ├── mobil_01.jpg
+│   │   └── zebra_cross_01.jpg
+│   │
+│   └── detections/                 
+│       ├── hasil_deteksi_01.jpg
+│       └── hasil_deteksi_02.jpg
+│
+└── runs/
+    └── detect/
+        └── custom_yolov8s/
+            └── weights/
+                └── best.pt          
 ```
 
 ## Cara Menjalankan
@@ -101,13 +113,10 @@ YOLOv8-BlindAssist/
 ## Batasan
 
 - Hanya mendeteksi 12 kategori objek statis/dinamis di area trotoar (tidak mencakup hewan, objek kecil, atau rambu lalu lintas selain zebra cross).
-- Dioptimalkan untuk lingkungan perkotaan dengan trotoar standar — belum diuji untuk lingkungan non-standar (hutan, lahan pertanian, hujan deras, kabut tebal, medan kasar, atau pencahayaan ekstrem).
+- Dioptimalkan untuk lingkungan perkotaan dengan trotoar standar dan belum diuji untuk lingkungan non-standar (hutan, lahan pertanian, hujan deras, kabut tebal, medan kasar, atau pencahayaan ekstrem).
 - Belum menyediakan informasi arah navigasi atau jarak antara objek dan pengguna, hanya memberi tahu objek apa yang ada di depan.
 - Akurasi menurun untuk objek yang letaknya jauh dari kamera, dan beberapa kategori (tiang, gerobak, kursi, mobil) memiliki tingkat kesalahan deteksi lebih tinggi.
 
-## Catatan Privasi dan Etika Data
+## Catatan Keamanan & Etika Data
 
-- Sistem menggunakan kamera untuk menangkap video lingkungan sekitar pengguna secara real-time; frame diproses langsung dan audio hasil gTTS dibangkitkan di memori (BytesIO) tanpa disimpan sebagai file permanen.
-- Karena memakai kamera di ruang publik, ada potensi menangkap gambar orang lain (bystander) secara tidak sengaja — pertimbangkan aspek privasi/etika bila sistem ini diuji atau digunakan di luar lingkungan riset.
-- Dataset dikumpulkan dari Google dan Roboflow; pastikan lisensi/izin penggunaan gambar dari sumber tersebut sudah sesuai sebelum didistribusikan secara publik.
-- **Jangan meng-hardcode API key** (seperti Roboflow API key) di kode yang diupload ke repo publik — gunakan environment variable dan tambahkan file kredensial ke `.gitignore`.
+Repository ini tidak menyertakan kredensial API apa pun (Roboflow API key digantikan dengan environment variable dan tidak diikutsertakan dalam kode). Dataset yang digunakan berupa gambar objek publik di area trotoar (seperti kendaraan, pejalan kaki, pohon, tiang, dan zebra cross) yang dikumpulkan dari sumber terbuka (Google dan platform Roboflow) untuk keperluan penelitian akademik non-komersial dalam rangka Data Science Capstone Project. Selama pengoperasian sistem, frame video dari kamera diproses secara real-time dan tidak disimpan secara permanen.
